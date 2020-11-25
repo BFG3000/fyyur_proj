@@ -201,17 +201,28 @@ def create_venue_form():
 @app.route('/venues/create', methods=['POST'])
 def create_venue_submission():
   entry= Venue()
+  vForm = VenueForm(request.form)
   #data
-  entry.name = request.form['name']
-  entry.city = request.form['city']
-  entry.state = request.form['state']
-  entry.phone = request.form['phone']
-  entry.genres = request.form['genres']
-  entry.image_link = request.form['image_link']
-  entry.facebook_link = request.form['facebook_link']
-  entry.website = request.form['website']
+  # entry.name = request.form['name']
+  # entry.city = request.form['city']
+  # entry.state = request.form['state']
+  # entry.phone = request.form['phone']
+  # entry.genres = request.form['genres']
+  # entry.image_link = request.form['image_link']
+  # entry.facebook_link = request.form['facebook_link']
+  # entry.website = request.form['website']
   # entry.seeking_talent = request.form['seeking_talent'] #soo buggy so i will remove it for now
   # entry.seeking_description = request.form['seeking_description']
+
+  entry.name = vForm.name.data
+  entry.city = vForm.city.data
+  entry.state = vForm.state.data
+  entry.address = vForm.address.data
+  entry.phone = vForm.phone.data
+  entry.genres = vForm.genres.data
+  entry.image_link = vForm.image_link.data
+  entry.facebook_link = vForm.facebook_link.data
+  entry.website = vForm.website.data
   
   # this 
   # if form.validate():
@@ -222,6 +233,7 @@ def create_venue_submission():
   # now we insert data 
   try:
     db.session.add(entry);
+    flash('Venue ' + request.form['name'] + ' was successfully listed!')
     db.session.commit()
   except expression as identifier:
     print('error couldnt insert data '+ identifier )
@@ -229,11 +241,7 @@ def create_venue_submission():
     db.session.rollback()
   finally:
     db.session.close()
-  # on successful db insert, flash success
-  flash('Venue ' + request.form['name'] + ' was successfully listed!')
-  # TODO: on unsuccessful db insert, flash an error instead done.
-  # e.g., flash('An error occurred. Venue ' + data.name + ' could not be listed.')
-  # see: http://flask.pocoo.org/docs/1.0/patterns/flashing/
+
   return render_template('pages/home.html')
 
 @app.route('/venues/<venue_id>', methods=['DELETE'])
@@ -447,27 +455,28 @@ def create_artist_form():
 @app.route('/artists/create', methods=['POST'])
 def create_artist_submission():
   # called upon submitting the new artist listing form
+  aForm = ArtistForm(request.form)
   entry= Artist()
   #data
-  entry.name = request.form['name']
-  entry.city = request.form['city']
-  entry.state = request.form['state']
-  entry.phone = request.form['phone']
-  entry.genres = request.form['genres']
-  entry.image_link = request.form['image_link']
-  entry.facebook_link = request.form['facebook_link']
-  entry.website = request.form['website']
+  entry.name = aForm.name.data
+  entry.city = aForm.city.data
+  entry.state = aForm.state.data
+  entry.phone = aForm.phone.data
+  entry.genres = aForm.genres.data
+  entry.image_link = aForm.image_link.data
+  entry.facebook_link = aForm.facebook_link.data
+  entry.website = aForm.website.data
   try:
     db.session.add(entry);
     db.session.commit()
+    flash('Artist was successfully listed!')
   except expression as identifier:
     print('error couldnt insert data '+ identifier )
     flash('Error couldnt add Artist ' + request.form['name'] + 'pls refresh the page and try again!')
     db.session.rollback()
   finally:
     db.session.close()
-  # on successful db insert, flash success
-  flash('Artist was successfully listed!')
+ 
   return render_template('pages/home.html')
 
 

@@ -17,6 +17,12 @@ class ShowForm(Form):
     )
 
 class VenueForm(Form):
+    def validate_phone(form, field):
+        us_phone_num= r"^[0-9]{3}-[0-9]{3}-[0-9]{4}$"
+        match = re.search(us_phone_num, field.data)
+        if not match:
+            raise ValidationError("Invalid phone number.")
+
     name = StringField(
         'name', validators=[DataRequired()]
     )
@@ -83,7 +89,7 @@ class VenueForm(Form):
         'address', validators=[DataRequired()]
     )
     phone = StringField(
-        'phone'
+        'phone', validators=[DataRequired(), validate_phone] 
     )
     image_link = StringField(
         'image_link'
@@ -128,6 +134,14 @@ class VenueForm(Form):
     )
 
 class ArtistForm(Form):
+
+    def validate_phone(form, field):
+        us_phone_num= r"^[0-9]{3}-[0-9]{3}-[0-9]{4}$"
+        match = re.search(us_phone_num, field.data)
+        if not match:
+            raise ValidationError("Invalid phone number.")
+    
+
     name = StringField(
         'name', validators=[DataRequired()]
     )
@@ -191,8 +205,7 @@ class ArtistForm(Form):
         ]
     )
     phone = StringField(
-        # TODO implement validation logic for state
-        'phone'
+        'phone', validators=[DataRequired(), validate_phone] 
     )
     image_link = StringField(
         'image_link'
